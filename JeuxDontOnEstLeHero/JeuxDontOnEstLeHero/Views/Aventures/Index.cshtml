@@ -1,0 +1,29 @@
+﻿@using JeuxDontOnEstLeHero.Core.data
+@model List<Aventure>
+
+@{
+    ViewData["Title"] = "Aventures";
+}
+
+<h1 class="text-center">@ViewBag.MonTitre </h1>
+<h2 class="text-center">Vos dernières aventures</h2>
+
+<div class="row justify-content-center">
+    <a class="btn btn-primary" asp-controller="Aventures" asp-action="Create">Nouvelle aventure</a>
+</div>
+
+
+<div class="row">
+    @foreach (var aventure in Model)
+    {
+        <a href="#" class="card border m-2 text-center" style="width:7rem">
+            <div class="card-body">
+                @aventure.Title
+            </div>
+        </a>
+    }
+</div>
+
+
+
+

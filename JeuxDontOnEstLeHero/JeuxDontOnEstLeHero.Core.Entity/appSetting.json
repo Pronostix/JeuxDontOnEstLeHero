@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "DefaultContext": "Server=ChezWam_NAS;Database=chezwam_sql.JeuxDontOnEstLeHero;User Id=sa;Password=S#d1t2ng3r!;"
+  }
+}
