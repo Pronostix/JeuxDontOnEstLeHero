@@ -15,27 +15,30 @@
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Number" class="control-label"></label>
                 <input asp-for="Number" class="form-control" />
+                <span asp-validation-for="Number" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-            <label asp-for="Question" class="control-label"></label>
-            <input asp-for="Question" class="form-control" value="@Model.Question.Title" />
-        </div>
-        @foreach (var question in Model.ListAnwser)
-        {
-            var name = "Answer" + question.Id;
-            <div class="form-group">
-                <label asp-for="@name" class="control-label">Question @question.Id</label>
-                <input asp-for="@name" class="form-control" value="@question.Description" />
-            </div>
-        }*@
+                    <label asp-for="Question" class="control-label"></label>
+                    <input asp-for="Question" class="form-control" value="@Model.Question.Title" />
+                </div>
+                @foreach (var question in Model.ListAnwser)
+                {
+                    var name = "Answer" + question.Id;
+                    <div class="form-group">
+                        <label asp-for="@name" class="control-label">Question @question.Id</label>
+                        <input asp-for="@name" class="form-control" value="@question.Description" />
+                    </div>
+                }*@
             <div class="form-group">
                 <input type="submit" value="Update" class="btn btn-primary" />
             </div>
@@ -47,3 +50,6 @@
     <a asp-action="List">Back to List</a>
 </div>
 
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

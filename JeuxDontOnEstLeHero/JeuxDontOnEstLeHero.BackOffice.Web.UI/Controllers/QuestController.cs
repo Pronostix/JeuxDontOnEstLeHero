@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using JeuxDontOnEstLeHero.Core.Data;
 using JeuxDontOnEstLeHero.Core.Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace JeuxDontOnEstLeHero.BackOffice.Web.UI.Controllers
 {
@@ -22,7 +23,7 @@ namespace JeuxDontOnEstLeHero.BackOffice.Web.UI.Controllers
         #region Props Private
 
         private readonly DefaultContext _defaultContext = null;
-        private Quest _questToDelete = null;
+
         #endregion
 
         #region Méthodes public
@@ -32,7 +33,7 @@ namespace JeuxDontOnEstLeHero.BackOffice.Web.UI.Controllers
         /// GET - Méthode appelée pour aller à la saisie du formulaire
         /// </summary>
         /// <returns></returns>
-        public ActionResult Create()
+        public  IActionResult Create()
         {
             return View();
         }
@@ -43,12 +44,18 @@ namespace JeuxDontOnEstLeHero.BackOffice.Web.UI.Controllers
         /// <param name="quest"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Create(Quest quest)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Quest quest)
         {
-            this._defaultContext.Quest.Add(quest);
-            this._defaultContext.SaveChanges();
+            if(ModelState.IsValid)
+            {
+                this._defaultContext.Quest.Add(quest);
+                await this._defaultContext.SaveChangesAsync();
 
-            return View("List", this._defaultContext.Quest);
+                return RedirectToAction(nameof(List));
+            }
+
+            return View(quest);
         }
 
         #endregion
@@ -58,13 +65,14 @@ namespace JeuxDontOnEstLeHero.BackOffice.Web.UI.Controllers
         /// GET - Méthode appelée pour aller à la saisie du formulaire
         /// </summary>
         /// <returns></returns>
-        public ActionResult Update(int id)
+        public async Task<IActionResult> Update(int id)
         {
+            Quest questUpdate = await this._defaultContext.Quest.FindAsync(id);
 
-            Quest questUpdate = null;
-
-            questUpdate = this._defaultContext.Quest.First(x => x.Id == id);
-   
+            if (questUpdate == null)
+            {
+                return NotFound();
+            }
 
             return View(questUpdate);
         }
@@ -75,17 +83,23 @@ namespace JeuxDontOnEstLeHero.BackOffice.Web.UI.Controllers
         /// <param name="quest"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Update(Quest quest)
+        public async Task<IActionResult> Update(Quest questUpdate)
         {
             // Modification d'un seul champ
             //this._defaultContext.Attach<Quest>(quest);
             //this._defaultContext.Entry(quest).Property(item => item.Title).IsModified = true;
 
             // Modification de tous les champs
-            this._defaultContext.Quest.Update(quest);
-            this._defaultContext.SaveChanges();
+            if (ModelState.IsValid)
+            {
+                this._defaultContext.Quest.Update(questUpdate);
+                await this._defaultContext.SaveChangesAsync();
 
-            return View("List", this._defaultContext.Quest);
+                return RedirectToAction(nameof(List));
+
+            }
+
+            return View(questUpdate);
         }
         #endregion
 
@@ -94,13 +108,15 @@ namespace JeuxDontOnEstLeHero.BackOffice.Web.UI.Controllers
         /// GET - Méthode appelée pour aller à la saisie du formulaire
         /// </summary>
         /// <returns></returns>
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            
-            Quest quest = null;
 
-            quest = this._defaultContext.Quest.First(x => x.Id == id);
-            this._questToDelete = quest;
+            Quest quest = await this._defaultContext.Quest.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (quest == null)
+            {
+                return NotFound();
+            }
 
             return View(quest);
         }
@@ -110,21 +126,24 @@ namespace JeuxDontOnEstLeHero.BackOffice.Web.UI.Controllers
         /// </summary>
         /// <param name="quest"></param>
         /// <returns></returns>
-        [HttpPost]
-        public ActionResult Delete()
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            Quest quest = await this._defaultContext.Quest.FindAsync(id);
             // Suppression de l'enregistrement
-            this._defaultContext.Quest.Remove(this._questToDelete);
-            this._defaultContext.SaveChanges();
+
+            this._defaultContext.Quest.Remove(quest);
+            await this._defaultContext.SaveChangesAsync();
             
-            return View("List", this._defaultContext.Quest);
+            return RedirectToAction(nameof(List));
         }
         #endregion
 
 
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
-            return View(this._defaultContext.Quest);
+            return View(await this._defaultContext.Quest.ToListAsync());
         }
 
         #endregion

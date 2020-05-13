@@ -20,16 +20,21 @@ namespace JeuxDontOnEstLeHero.Core.Data.Models
         /// <summary>
         /// Numéro de la quête
         /// </summary>
+        [Required(ErrorMessage ="Le numéro de la quête est obligatoire.")]
+        [Range(1,100, ErrorMessage = "Le numéro de la quête doit être compris entre 1 et 100.")]
         public int Number { get; set; }
 
         /// <summary>
         /// Titre
-        /// </summary>
+        /// </summary> 
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Le nom de la quête est obligatoire.")]
         public string Title { get; set; }
 
         /// <summary>
         /// Description
         /// </summary>
+        [Required(ErrorMessage = "La description de la quête est obligatoire.")]
+        [MaxLength(50,ErrorMessage = "La description ne doit pas dépasser 50 caractères.")]
         public string Description { get; set; }
 
         /// <summary>

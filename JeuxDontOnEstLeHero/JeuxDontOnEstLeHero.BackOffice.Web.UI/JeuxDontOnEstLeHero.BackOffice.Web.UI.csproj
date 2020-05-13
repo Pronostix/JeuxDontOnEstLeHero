@@ -21,8 +21,4 @@
     <ProjectReference Include="..\JeuxDontOnEstLeHero.Core.Data\JeuxDontOnEstLeHero.Core.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\Quest\" />
-  </ItemGroup>
-
 </Project>
